@@ -29,16 +29,5 @@ class ApplicationSpec extends Specification {
         contentAsString(home) must contain ("Your new application is ready.")
       }
     }
-    
-    "create simple note" in {
-      running(FakeApplication()) {
-        import play.api.libs.json.Json
-        val json = Json.obj("name" -> "test")
-
-        val result = route(FakeRequest(POST, "/note", FakeHeaders(Seq("Content-type"->Seq("application/json"))), json)).get
-        
-        status(result) must equalTo(OK)
-      }
-    }
   }
 }
