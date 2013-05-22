@@ -13,11 +13,11 @@ import org.junit.runner.RunWith
  * You can mock out a whole application including requests, plugins etc.
  * For more information, consult the wiki.
  */
-@RunWith(classOf[JUnitRunner])
+@RunWith( classOf[ JUnitRunner ] )
 class CRUD extends Specification {
 
   "create simple note" in {
-    running( FakeApplication() ) {
+    running( FakeApplication( additionalPlugins = Seq( "play.modules.reactivemongo.ReactiveMongoPlugin" ) ) ) {
       val json = Json.obj( "name" -> "test 1" )
 
       val result = route( FakeRequest( POST, "/note", FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), json ) ).get
