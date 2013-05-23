@@ -25,4 +25,16 @@ class CRUD extends Specification {
       status( result ) must equalTo( OK )
     }
   }
+
+  "find note" in {
+    running( FakeApplication( additionalPlugins = Seq( "play.modules.reactivemongo.ReactiveMongoPlugin" ) ) ) {
+
+      val result = route( FakeRequest( GET, "/note/test%201" ) ).get
+
+      println( contentAsString( result ) )
+
+      status( result ) must equalTo( OK )
+    }
+  }
+
 }	
