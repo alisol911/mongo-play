@@ -22,6 +22,7 @@ class CRUD extends Specification {
 
       val result = route( FakeRequest( POST, "/note", FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), json ) ).get
 
+      println ( contentAsString( result ) )
       status( result ) must equalTo( OK )
     }
   }
