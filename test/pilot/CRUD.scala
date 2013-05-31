@@ -13,7 +13,7 @@ import scala.util.Random
  * You can mock out a whole application including requests, plugins etc.
  * For more information, consult the wiki.
  */
-@RunWith( classOf[JUnitRunner] )
+@RunWith( classOf[ JUnitRunner ] )
 class CRUD extends Specification {
 
   "create simple note" in {
@@ -24,38 +24,26 @@ class CRUD extends Specification {
       val jsonForInsert = Json.obj( "name" -> nameForInsert )
       val jsonForUpdate = Json.obj( "name" -> nameForUpdate, "family" -> familyForUpdate )
 
-      val createResult = route( FakeRequest( POST, "/note", FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), jsonForInsert ) ).get
+      val createResult = route( FakeRequest( POST, "/service/entity/note", FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), jsonForInsert ) ).get
       status( createResult ) must equalTo( OK )
       val id = contentAsString( createResult )
 
-      val findForInsertResult = route( FakeRequest( GET, "/note/" + id ) ).get
+      val findForInsertResult = route( FakeRequest( GET, "/service/entity/note/" + id ) ).get
       status( findForInsertResult ) must equalTo( OK )
       val jsonFindForInsertResult = Json.parse( contentAsString( findForInsertResult ) )
       ( jsonFindForInsertResult \ "name" ).toString must equalTo( '"' + nameForInsert + '"' )
 
-      val updateResult = route( FakeRequest( PUT, "/note/" + id, FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), jsonForUpdate ) ).get
+      val updateResult = route( FakeRequest( PUT, "/service/entity/note/" + id, FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), jsonForUpdate ) ).get
       status( updateResult ) must equalTo( OK )
 
-      val findForUpdateResult = route( FakeRequest( GET, "/note/" + id ) ).get
+      val findForUpdateResult = route( FakeRequest( GET, "/service/entity/note/" + id ) ).get
       status( findForUpdateResult ) must equalTo( OK )
       val jsonFindForUpdateResult = Json.parse( contentAsString( findForUpdateResult ) )
       ( jsonFindForUpdateResult \ "name" ).toString must equalTo( '"' + nameForUpdate + '"' )
       ( jsonFindForUpdateResult \ "family" ).toString must equalTo( '"' + familyForUpdate + '"' )
 
-      val deleteResult = route( FakeRequest( DELETE, "/note/" + id ) ).get
+      val deleteResult = route( FakeRequest( DELETE, "/service/entity/note/" + id ) ).get
       status( findForUpdateResult ) must equalTo( OK )
     }
   }
-
-  //  "find note" in {
-  //    running( FakeApplication( additionalPlugins = Seq( "play.modules.reactivemongo.ReactiveMongoPlugin" ) ) ) {
-  //
-  //      val result = route( FakeRequest( GET, "/note/test%201" ) ).get
-  //
-  //      println( contentAsString( result ) )
-  //
-  //      status( result ) must equalTo( OK )
-  //    }
-  //  }
-
 }	

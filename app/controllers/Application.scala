@@ -11,7 +11,7 @@ import play.api.http.Writeable
 
 object Application extends Controller with MongoController {
 
-  def collection( collectionName: String ): JSONCollection = db.collection[JSONCollection]( collectionName )
+  def collection( collectionName: String ): JSONCollection = db.collection[ JSONCollection ]( collectionName )
 
   private implicit def stringToObjectID( id: String ): play.api.libs.json.JsObject = {
     JsObject( Seq( "_id" -> JsObject( Seq( "$oid" -> JsString( id ) ) ) ) )
@@ -21,11 +21,11 @@ object Application extends Controller with MongoController {
     Ok( views.html.index( "Your new application is ready." ) )
   }
 
-  def createNote = Action( parse.json ) { implicit request ⇒
+  def create( entity: String ) = Action( parse.json ) { implicit request ⇒
     Async {
       val id = BSONObjectID.generate.stringify
-      val json = id ++ request.body.as[JsObject]
-      collection( "note" ).insert( json ).map { lastError ⇒
+      val json = id ++ request.body.as[ JsObject ]
+      collection( entity ).insert( json ).map { lastError ⇒
         if ( lastError.inError )
           InternalServerError( lastError.toString )
         else
@@ -37,16 +37,16 @@ object Application extends Controller with MongoController {
     }
   }
 
-  def findNote( id: String ) = Action { implicit request ⇒
+  def find( entity: String, id: String ) = Action { implicit request ⇒
     Async {
-      val cursor = collection( "note" ).find( stringToObjectID( id ) ).cursor[play.api.libs.json.JsObject]
-      cursor.toList.map( ( f: List[JsObject] ) ⇒ Ok( f.head ) )
+      val cursor = collection( entity ).find( stringToObjectID( id ) ).cursor[ play.api.libs.json.JsObject ]
+      cursor.toList.map( ( f: List[ JsObject ] ) ⇒ Ok( f.head ) )
     }
   }
 
-  def editNote( id: String ) = Action( parse.json ) { implicit request ⇒
+  def edit( entity: String, id: String ) = Action( parse.json ) { implicit request ⇒
     Async {
-      collection( "note" ).update( stringToObjectID( id ), request.body.as[JsObject] ).map { lastError ⇒
+      collection( entity ).update( stringToObjectID( id ), request.body.as[ JsObject ] ).map { lastError ⇒
         if ( lastError.inError )
           InternalServerError( lastError.toString )
         else
@@ -58,9 +58,9 @@ object Application extends Controller with MongoController {
     }
   }
 
-  def deleteNote( id: String ) = Action {
+  def delete( entity: String, id: String ) = Action {
     Async {
-      collection( "note" ).remove( stringToObjectID( id ) ).map { lastError ⇒
+      collection( entity ).remove( stringToObjectID( id ) ).map { lastError ⇒
         if ( lastError.inError )
           InternalServerError( lastError.toString )
         else
