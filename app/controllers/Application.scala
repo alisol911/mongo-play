@@ -44,6 +44,14 @@ object Application extends Controller with MongoController {
     }
   }
 
+  def findAll( entity: String, criteria: String ) = Action { implicit request ⇒
+    Async {
+      val criteriaJson = Json.parse( criteria )
+      val cursor = collection( entity ).find( criteriaJson ).cursor[ play.api.libs.json.JsObject ]
+      cursor.toList.map( ( f: List[ JsObject ] ) ⇒ Ok( JsArray( f ) ) )
+    }
+  }
+
   def edit( entity: String, id: String ) = Action( parse.json ) { implicit request ⇒
     Async {
       collection( entity ).update( stringToObjectID( id ), request.body.as[ JsObject ] ).map { lastError ⇒

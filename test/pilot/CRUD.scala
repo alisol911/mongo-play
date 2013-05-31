@@ -7,6 +7,7 @@ import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
 import org.junit.runner.RunWith
 import scala.util.Random
+import play.api.libs.json.JsArray
 
 /**
  * Add your spec here.
@@ -18,8 +19,8 @@ class CRUD extends Specification {
 
   "create simple note" in {
     running( FakeApplication( additionalPlugins = Seq( "play.modules.reactivemongo.ReactiveMongoPlugin" ) ) ) {
-      val nameForInsert = "test " + Random.nextInt
-      val nameForUpdate = "test " + Random.nextInt
+      val nameForInsert = "test" + Random.nextInt
+      val nameForUpdate = "test" + Random.nextInt
       val familyForUpdate = "test " + Random.nextInt
       val jsonForInsert = Json.obj( "name" -> nameForInsert )
       val jsonForUpdate = Json.obj( "name" -> nameForUpdate, "family" -> familyForUpdate )
@@ -32,6 +33,11 @@ class CRUD extends Specification {
       status( findForInsertResult ) must equalTo( OK )
       val jsonFindForInsertResult = Json.parse( contentAsString( findForInsertResult ) )
       ( jsonFindForInsertResult \ "name" ).toString must equalTo( '"' + nameForInsert + '"' )
+
+      val findAllForInsertResult = route( FakeRequest( GET, "/service/entity/note?criteria=%7B%22name%22%3A%22" + nameForInsert + "%22%7D" ) ).get
+      status( findAllForInsertResult ) must equalTo( OK )
+      val jsonFindAllForInsertResult = Json.parse( contentAsString( findAllForInsertResult ) ).as[ JsArray ]
+      ( jsonFindAllForInsertResult( 0 ) \ "name" ).toString must equalTo( '"' + nameForInsert + '"' )
 
       val updateResult = route( FakeRequest( PUT, "/service/entity/note/" + id, FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), jsonForUpdate ) ).get
       status( updateResult ) must equalTo( OK )
