@@ -3,18 +3,28 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>xteam</title>
-    <style type="text/css">
-        @import "dojo/dijit/themes/claro/claro.css";
-        @import "dojo/dojo/resources/dojo.css"
-    </style>
-    <script type="text/javascript" src="dojo/dojo/dojo.js"  djConfig="parseOnLoad: true"></script>
+<style type="text/css">
+    @import "dojo/dijit/themes/claro/claro.css";
+    @import "dojo/dojo/resources/dojo.css"
+</style>
+
+<script>
+    var path = location.pathname.split("/");
+    path.pop();
+    dojoConfig = {
+        parseOnLoad: true,
+        packages: [
+            {
+                name: "ex",
+                location: location.origin + path.join("/") + "/scripts"
+            }
+        ]
+    };
+</script>
+<script src="dojo/dojo/dojo.js"></script>
     
-    <script type="text/javascript" src="main.js"></script>
 </head>
 <body class="claro">
-Name: <textarea id="text" name="" cols="40" rows="5" ></textarea>
-<p/> <input type="button" value="Create" onclick="create()"> <p/>
-
-<div id="container" />
+    <div data-dojo-type="ex/widgets/Command"></div>
 </body>
 </html>
