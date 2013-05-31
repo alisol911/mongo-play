@@ -27,17 +27,17 @@ class CRUD extends Specification {
 
       val createResult = route( FakeRequest( POST, "/service/entity/note", FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), jsonForInsert ) ).get
       status( createResult ) must equalTo( OK )
-      val id = contentAsString( createResult )
+      val id = (Json.parse( contentAsString( createResult ) ) \ "_id" \ "$oid").as[String]
 
       val findForInsertResult = route( FakeRequest( GET, "/service/entity/note/" + id ) ).get
       status( findForInsertResult ) must equalTo( OK )
       val jsonFindForInsertResult = Json.parse( contentAsString( findForInsertResult ) )
-      ( jsonFindForInsertResult \ "name" ).toString must equalTo( '"' + nameForInsert + '"' )
+      ( jsonFindForInsertResult \ "name" ).as[String] must equalTo( nameForInsert )
 
       val findAllForInsertResult = route( FakeRequest( GET, "/service/entity/note?criteria=%7B%22name%22%3A%22" + nameForInsert + "%22%7D" ) ).get
       status( findAllForInsertResult ) must equalTo( OK )
       val jsonFindAllForInsertResult = Json.parse( contentAsString( findAllForInsertResult ) ).as[ JsArray ]
-      ( jsonFindAllForInsertResult( 0 ) \ "name" ).toString must equalTo( '"' + nameForInsert + '"' )
+      ( jsonFindAllForInsertResult( 0 ) \ "name" ).as[String] must equalTo( nameForInsert )
 
       val updateResult = route( FakeRequest( PUT, "/service/entity/note/" + id, FakeHeaders( Seq( "Content-type" -> Seq( "application/json" ) ) ), jsonForUpdate ) ).get
       status( updateResult ) must equalTo( OK )
@@ -45,8 +45,8 @@ class CRUD extends Specification {
       val findForUpdateResult = route( FakeRequest( GET, "/service/entity/note/" + id ) ).get
       status( findForUpdateResult ) must equalTo( OK )
       val jsonFindForUpdateResult = Json.parse( contentAsString( findForUpdateResult ) )
-      ( jsonFindForUpdateResult \ "name" ).toString must equalTo( '"' + nameForUpdate + '"' )
-      ( jsonFindForUpdateResult \ "family" ).toString must equalTo( '"' + familyForUpdate + '"' )
+      ( jsonFindForUpdateResult \ "name" ).as[String] must equalTo( nameForUpdate )
+      ( jsonFindForUpdateResult \ "family" ).as[String] must equalTo( familyForUpdate )
 
       val deleteResult = route( FakeRequest( DELETE, "/service/entity/note/" + id ) ).get
       status( findForUpdateResult ) must equalTo( OK )

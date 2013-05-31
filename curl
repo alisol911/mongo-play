@@ -1,1 +1,7 @@
-curl -X POST -H'Content-Type: application/json' -d'{"name":"Hello"}' http://localhost:9000/note
+curl -X POST -H'Content-Type: application/json' -d'{"name":"Hello"}' http://localhost:9000/service/entity/note
+
+curl -X POST -H'Content-Type: application/json' -d'{"name":"Hello"}' http://localhost:9000/service/entity/test
+curl -X GET http://localhost:9000/service/entity/test/51a8a1125a26f73a00180aab
+curl -X PUT -H'Content-Type: application/json' -d'{"name":"Hello 2"}' http://localhost:9000/service/entity/test/51a8a1125a26f73a00180aab
+curl -X DELETE http://localhost:9000/service/entity/test/51a8a1125a26f73a00180aab
+curl -X GET http://localhost:9000/service/entity/test

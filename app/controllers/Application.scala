@@ -29,7 +29,7 @@ object Application extends Controller with MongoController {
         if ( lastError.inError )
           InternalServerError( lastError.toString )
         else
-          Ok( id )
+          Ok( json )
       } recover {
         case e ⇒
           InternalServerError( e.getMessage )
@@ -39,26 +39,38 @@ object Application extends Controller with MongoController {
 
   def find( entity: String, id: String ) = Action { implicit request ⇒
     Async {
-      val cursor = collection( entity ).find( stringToObjectID( id ) ).cursor[ play.api.libs.json.JsObject ]
-      cursor.toList.map( ( f: List[ JsObject ] ) ⇒ Ok( f.head ) )
+      collection( entity ).find[ JsObject ]( id )
+        .cursor[ play.api.libs.json.JsObject ]
+        .toList.map{ ( f: List[ JsObject ] ) ⇒
+          if ( f.isEmpty )
+            NoContent
+          else
+            Ok( f.head )
+        }
     }
   }
 
   def findAll( entity: String, criteria: String ) = Action { implicit request ⇒
     Async {
-      val criteriaJson = Json.parse( criteria )
-      val cursor = collection( entity ).find( criteriaJson ).cursor[ play.api.libs.json.JsObject ]
-      cursor.toList.map( ( f: List[ JsObject ] ) ⇒ Ok( JsArray( f ) ) )
+      collection( entity ).find( Json.parse( criteria ) )
+        .cursor[ play.api.libs.json.JsObject ]
+        .toList.map{ ( f: List[ JsObject ] ) ⇒
+          if ( f.isEmpty )
+            NoContent
+          else
+            Ok( JsArray( f ) )
+        }
     }
   }
 
   def edit( entity: String, id: String ) = Action( parse.json ) { implicit request ⇒
     Async {
-      collection( entity ).update( stringToObjectID( id ), request.body.as[ JsObject ] ).map { lastError ⇒
+      val json = request.body.as[ JsObject ]
+      collection( entity ).update[ JsObject, JsObject ]( id, json ).map { lastError ⇒
         if ( lastError.inError )
           InternalServerError( lastError.toString )
         else
-          Ok( id )
+          Ok( json )
       } recover {
         case e ⇒
           InternalServerError( e.getMessage )
@@ -68,11 +80,11 @@ object Application extends Controller with MongoController {
 
   def delete( entity: String, id: String ) = Action {
     Async {
-      collection( entity ).remove( stringToObjectID( id ) ).map { lastError ⇒
+      collection( entity ).remove[ JsObject ]( id ).map { lastError ⇒
         if ( lastError.inError )
           InternalServerError( lastError.toString )
         else
-          Ok( id )
+          Ok( "" )
       } recover {
         case e ⇒
           InternalServerError( e.getMessage )
