@@ -1,7 +1,32 @@
 @(message: String)
 
-@main("Welcome to Play 2.1") {
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>xteam</title>
+<style type="text/css">
+    @@import @routes.Assets.at("dojo/dijit/themes/claro/claro.css");
+    @@import @routes.Assets.at("dojo/dojo/resources/dojo.css")
+</style>
+
+<script>
+    var path = location.pathname.split("/");
+    path.pop();
+    dojoConfig = {
+        parseOnLoad: true,
+        packages: [
+            {
+                name: "ex",
+                location: location.origin + path.join("/") + "@routes.Assets.at("scripts")"
+            }
+        ]
+    };
+</script>
+<script src="@routes.Assets.at("dojo/dojo/dojo.js")"></script>
     
-    @play20.welcome(message)
-    
-}
+</head>
+<body class="claro">
+    <div data-dojo-type="ex/widgets/Command"></div>
+</body>
+</html>

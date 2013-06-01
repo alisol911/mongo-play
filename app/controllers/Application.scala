@@ -18,7 +18,7 @@ object Application extends Controller with MongoController {
   }
 
   def index = Action {
-    Ok( views.html.index( "Your new application is ready." ) )
+    Ok( views.html.index( "" ) )
   }
 
   def create( entity: String ) = Action( parse.json ) { implicit request ⇒
