@@ -19,8 +19,11 @@ return declare([_WidgetBase, _TemplatedMixin], {
     },
     
     _run: function() {
-        var self = this;
-        this.jsonRest.query().then(function(data){
+        var self = this,
+            queryParam = {};
+        if (this.criteria.value != "")
+            queryParam["criteria"] = this.criteria.value;
+        this.jsonRest.query(queryParam).then(function(data){
             array.forEach(data, function(item){
                 var note = new Note({target: self.target, entity: item});
                 self.list.appendChild(note.domNode);

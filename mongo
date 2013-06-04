@@ -1,0 +1,16 @@
+> db.note.find({ "_id" : ObjectId("51a8a2965a26f71500ddb13f")})
+{ "_id" : ObjectId("51a8a2965a26f71500ddb13f"), "tags" : [ "test1" ] }
+
+# add element to array
+> db.note.update({ "_id" : ObjectId("51a8a2965a26f71500ddb13f")}, {$addToSet: {tags:"test2"}})
+> db.note.find({ "_id" : ObjectId("51a8a2965a26f71500ddb13f")})
+{ "_id" : ObjectId("51a8a2965a26f71500ddb13f"), "tags" : [ "test1", "test2" ] }
+
+# drop element from array
+> db.note.update( { "_id" : ObjectId("51a8a2965a26f71500ddb13f") }, { $pull: { tags: 'test2' } } )
+
+# update specific field
+db.note.update( { "_id" : ObjectId("51a8a2965a26f71500ddb13f") }, { $set: { name: 'NAME2' } } )
+
+# find by array element
+db.note.find( { tags : {$in : ['test1']} } )
