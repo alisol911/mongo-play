@@ -6,8 +6,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>xteam</title>
 <style type="text/css">
-    @@import @routes.Assets.at("dojo/dijit/themes/claro/claro.css");
-    @@import @routes.Assets.at("dojo/dojo/resources/dojo.css")
+    @@import "@routes.Assets.at("dojo/dijit/themes/claro/claro.css")";
+    @@import "@routes.Assets.at("dojo/dojo/resources/dojo.css")";
+    @@import "@routes.Assets.at("stylesheets/main.css")";
 </style>
 
 <script>
@@ -27,7 +28,12 @@
     
 </head>
 <body class="claro">
-    <div data-dojo-type="ex/widgets/Command"></div>
-    <div data-dojo-type="ex/widgets/Query"></div>
+    <header>
+        <p/>
+    </header>
+    <div class="center">
+        <div data-dojo-type="ex/widgets/Command"></div>
+        <div data-dojo-type="ex/widgets/Query"></div>
+    </div>
 </body>
 </html>

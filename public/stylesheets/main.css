@@ -1,0 +1,12 @@
+.center {
+  margin:auto;
+  width: 40%;
+}
+
+
+/***** widgets *****/
+.action {
+  cursor: pointer;
+  color: blue;
+}
+/*******************/
