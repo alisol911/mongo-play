@@ -24,5 +24,5 @@ class Playground extends Specification {
       status( findAll ) must equalTo( OK )
       println( contentAsString( findAll ) )
     }
-
+  }
 }

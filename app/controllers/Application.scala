@@ -66,7 +66,7 @@ object Application extends Controller with MongoController {
   def edit( entity: String, id: String ) = Action( parse.json ) { implicit request ⇒
     Async {
       val json = request.body.as[ JsObject ]
-      collection( entity ).update[ JsObject, JsObject ]( id, json ).map { lastError ⇒
+      collection( entity ).update[ JsObject, JsObject ]( id, Json.obj( "$set" -> json ) ).map { lastError ⇒
         if ( lastError.inError )
           InternalServerError( lastError.toString )
         else
@@ -84,7 +84,7 @@ object Application extends Controller with MongoController {
         if ( lastError.inError )
           InternalServerError( lastError.toString )
         else
-          Ok( "" )
+          NoContent
       } recover {
         case e ⇒
           InternalServerError( e.getMessage )
