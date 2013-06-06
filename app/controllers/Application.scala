@@ -57,13 +57,13 @@ object Application extends Controller with MongoController {
 
   def find( entity: String, id: String ) = Action { implicit request ⇒
     findWraper( () ⇒ collection( entity ).find[ JsObject ]( id )
-      .cursor[ play.api.libs.json.JsObject ].toList, ( l ) ⇒ if ( l.isEmpty ) NoContent else Ok( l.head ) )
+      .cursor[ play.api.libs.json.JsObject ].toList, ( l ) ⇒ Ok( l.head ) )
   }
 
   def findAll( entity: String, criteria: String ) = Action { implicit request ⇒
     findWraper( () ⇒ collection( entity ).find( Json.parse( criteria ) )
       .cursor[ play.api.libs.json.JsObject ]
-      .toList, ( l ) ⇒ if ( l.isEmpty ) NoContent else Ok( JsArray( l ) ) )
+      .toList, ( l ) ⇒ Ok( JsArray( l ) ) )
   }
 
   def edit( entity: String, id: String ) = Action( parse.json ) { implicit request ⇒
